@@ -17,8 +17,6 @@
 
 package com.adr.imagechooser;
 
-import com.adr.awesomeicon.AwesomeIcon;
-import com.adr.awesomeicon.Icon;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,7 +31,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -56,8 +53,6 @@ public class ImageChooser extends AnchorPane {
     @FXML private HBox  toolbar;
     @FXML private StackPane imagepane;
     @FXML private ImageView imageview;
-    @FXML private Button choosebutton;
-    @FXML private Button deletebutton;
     
     private FadeTransition fadetransition;
     
@@ -160,9 +155,6 @@ public class ImageChooser extends AnchorPane {
     public void initialize() {   
         
         toolbar.setOpacity(0.0);
-        
-        choosebutton.setGraphic(new Icon(AwesomeIcon.FOLDER_O, 14.0));
-        deletebutton.setGraphic(new Icon(AwesomeIcon.TRASH, 14.0));
         
         imageview.fitHeightProperty().bind(imagepane.heightProperty().subtract(imagemargin.multiply(2.0)));
         imageview.fitWidthProperty().bind(imagepane.widthProperty().subtract(imagemargin.multiply(2.0)));       

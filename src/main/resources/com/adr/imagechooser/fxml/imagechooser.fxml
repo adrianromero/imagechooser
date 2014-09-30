@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.adr.awesomeicon.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -15,8 +16,14 @@
       </StackPane>
       <HBox fx:id="toolbar" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button fx:id="choosebutton" focusTraversable="false" mnemonicParsing="false" onAction="#chooseAction" />
-            <Button fx:id="deletebutton" focusTraversable="false" mnemonicParsing="false" onAction="#clearAction" />
+            <Button focusTraversable="false" mnemonicParsing="false" onAction="#chooseAction">
+               <graphic>
+                  <Icon icon="FOLDER_O" />
+               </graphic></Button>
+            <Button focusTraversable="false" mnemonicParsing="false" onAction="#clearAction">
+               <graphic>
+                  <Icon icon="TRASH" />
+               </graphic></Button>
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
