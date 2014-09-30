@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.adr.imagechooser.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="380.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.adr.imagechooser.FXMLController">
+    <children>
+      <BorderPane layoutX="300.0" layoutY="103.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <items>
+                    <Button onAction="#handleButtonAction" text="Load" />
+                  <Button mnemonicParsing="false" onAction="#clearAction" text="Clear" />
+               </items>
+            </ToolBar>
+         </top>
+         <center>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <StackPane fx:id="imagepane" layoutX="31.0" layoutY="18.0" prefHeight="200.0" prefWidth="200.0" styleClass="panefocusable">
+                     <children>
+                        <ImageView fx:id="imageview" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <ImageChooser fx:id="imagechooser" layoutX="364.0" layoutY="27.0" />
+               </children>
+            </AnchorPane>
+         </center>
+      </BorderPane>
+    </children>
+</AnchorPane>
