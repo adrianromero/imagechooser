@@ -58,7 +58,7 @@ public class ImageChooser extends AnchorPane {
     
     public ImageChooser() {
         
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/imagechooser.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/adr/imagechooser/fxml/imagechooser.fxml"));
         loader.setResources(ResourceBundle.getBundle("com/adr/imagechooser/fxml/imagechooser"));
         loader.setController(this);
         loader.setRoot(this);
