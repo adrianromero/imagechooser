@@ -106,7 +106,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>AwesomeIcon</artifactId>
+            <artifactId>fonticon</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
