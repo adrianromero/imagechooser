@@ -18,7 +18,7 @@
 package com.adr.imagechooser;
 
 import com.adr.fonticon.FontAwesome;
-import com.adr.fonticon.Icon;
+import com.adr.fonticon.IconBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -162,8 +162,8 @@ public class ImageChooser extends AnchorPane {
         
         toolbar.setOpacity(0.0);
         
-        choosebutton.setGraphic(new Icon(FontAwesome.FA_FOLDER_O));
-        clearbutton.setGraphic(new Icon(FontAwesome.FA_TRASH));
+        choosebutton.setGraphic(IconBuilder.create(FontAwesome.FA_FOLDER_O).build());
+        clearbutton.setGraphic(IconBuilder.create(FontAwesome.FA_TRASH).build());
         
         imageview.fitHeightProperty().bind(imagepane.heightProperty().subtract(imagemargin.multiply(2.0)));
         imageview.fitWidthProperty().bind(imagepane.widthProperty().subtract(imagemargin.multiply(2.0)));       
