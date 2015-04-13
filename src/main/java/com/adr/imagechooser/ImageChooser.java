@@ -27,9 +27,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -61,6 +63,8 @@ public class ImageChooser extends AnchorPane {
     @FXML private Button clearbutton;
     
     private FadeTransition fadetransition;
+    private boolean hasmouse;
+    private boolean hasfocus;
     
     public ImageChooser() {
         
@@ -77,11 +81,13 @@ public class ImageChooser extends AnchorPane {
     }
     @FXML
     void chooseAction(ActionEvent event) {
+        requestFocus();
         chooseImage();
     }
 
     @FXML
     void clearAction(ActionEvent event) {
+        requestFocus();
         setImage(null);
     }
     
@@ -96,9 +102,8 @@ public class ImageChooser extends AnchorPane {
     
     @FXML
     void mouseEnterAction(MouseEvent event) {
-        fadetransition.setFromValue(toolbar.getOpacity());
-        fadetransition.setToValue(1.0);
-        fadetransition.playFromStart();
+        hasmouse = true;
+        buttonsVisibility();
     }
     
     @FXML
@@ -108,30 +113,32 @@ public class ImageChooser extends AnchorPane {
     
     @FXML
     void mouseExitAction(MouseEvent event) {
-        fadetransition.setFromValue(toolbar.getOpacity());
-        fadetransition.setToValue(0.0);
-        fadetransition.playFromStart();
+        hasmouse = false;
+        buttonsVisibility();
     }
     
     void chooseImage() {
-        final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose image");
-        fileChooser.setInitialDirectory(
-            new File(System.getProperty("user.home"))
-        );         
-        fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter(resources.getString("label.allimages"), "*.*"),
-            new FileChooser.ExtensionFilter("JPG", "*.jpg"),
-            new FileChooser.ExtensionFilter("PNG", "*.png")
-        );
-        File file = fileChooser.showOpenDialog(this.getScene().getWindow());
-        if (file != null) {
-            try {
-                setImage(new Image(file.toURI().toURL().toString()));
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        
+        Platform.runLater(() -> {
+            final FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Choose image");
+            fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home"))
+            );         
+            fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(resources.getString("label.allimages"), "*.*"),
+                new FileChooser.ExtensionFilter("JPG", "*.jpg"),
+                new FileChooser.ExtensionFilter("PNG", "*.png")
+            );
+            File file = fileChooser.showOpenDialog(this.getScene().getWindow());
+            if (file != null) {
+                try {
+                    setImage(new Image(file.toURI().toURL().toString()));
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(ImageChooser.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        } 
+        });
     }
 
     public final void setImage(Image value) {
@@ -144,11 +151,12 @@ public class ImageChooser extends AnchorPane {
         return imageview.imageProperty();
     }
     
-    private DoubleProperty imagemargin = new SimpleDoubleProperty(2.0);
+    private DoubleProperty imagemargin = new SimpleDoubleProperty(10.0);
 
     public final void setImageMargin(double value) {
         imageMarginProperty().set(value);
     }
+    
     public final double getImageMargin() {
         return imagemargin.get();
     }
@@ -157,19 +165,38 @@ public class ImageChooser extends AnchorPane {
         return imagemargin;
     }    
     
+    private void buttonsVisibility() {
+        if (hasmouse || hasfocus) {
+            fadetransition.setFromValue(toolbar.getOpacity());
+            fadetransition.setToValue(1.0);
+            fadetransition.playFromStart();            
+        } else {
+           fadetransition.setFromValue(toolbar.getOpacity());
+           fadetransition.setToValue(0.0);
+           fadetransition.playFromStart();           
+        }
+    }
+    
     @FXML
     public void initialize() {   
-        
-        toolbar.setOpacity(0.0);
-        
+
         choosebutton.setGraphic(IconBuilder.create(FontAwesome.FA_FOLDER_O).build());
         clearbutton.setGraphic(IconBuilder.create(FontAwesome.FA_TRASH).build());
         
         imageview.fitHeightProperty().bind(imagepane.heightProperty().subtract(imagemargin.multiply(2.0)));
         imageview.fitWidthProperty().bind(imagepane.widthProperty().subtract(imagemargin.multiply(2.0)));       
         
+        toolbar.setOpacity(0.0);
         fadetransition = new FadeTransition(Duration.millis(200), toolbar);
         fadetransition.setCycleCount(1);
-        fadetransition.setInterpolator(Interpolator.EASE_BOTH);        
+        fadetransition.setInterpolator(Interpolator.EASE_BOTH);    
+        
+        focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            hasfocus = newPropertyValue;
+            buttonsVisibility();
+        });        
+
+        hasmouse = false;
+        hasfocus = this.isFocused();
     }    
 }
