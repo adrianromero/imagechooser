@@ -27,6 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -35,6 +37,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -44,6 +47,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
@@ -58,13 +62,23 @@ public class ImageChooser extends AnchorPane {
     @FXML private HBox  toolbar;
     @FXML private StackPane imagepane;
     @FXML private ImageView imageview;
+    @FXML private StackPane panecam;
+    @FXML private ImageWebcam imagecam;
     
     @FXML private Button choosebutton;
     @FXML private Button clearbutton;
+    @FXML private Button webcambutton;
+    @FXML private Button webcamtrigger;
+    @FXML private Button webcamcancel;
+    
+    @FXML private StackPane flash;
+    private Transition flashtransition;
     
     private FadeTransition fadetransition;
     private boolean hasmouse;
     private boolean hasfocus;
+    
+    private AudioClip triggerclip;
     
     public ImageChooser() {
         
@@ -79,6 +93,52 @@ public class ImageChooser extends AnchorPane {
             throw new RuntimeException(exception);
         }
     }
+    
+    @FXML
+    public void initialize() {   
+        
+        triggerclip = new AudioClip(getClass().getResource("/com/adr/imagechooser/clips/51360__thecheeseman__camera-snap1.wav").toExternalForm());
+
+        choosebutton.setGraphic(IconBuilder.create(FontAwesome.FA_FOLDER_O).build());
+        clearbutton.setGraphic(IconBuilder.create(FontAwesome.FA_TRASH).build());
+        webcambutton.setGraphic(IconBuilder.create(FontAwesome.FA_CAMERA).build());
+        webcamtrigger.setGraphic(IconBuilder.create(FontAwesome.FA_CIRCLE).style("-fx-fill: green;").build());
+        webcamcancel.setGraphic(IconBuilder.create(FontAwesome.FA_SQUARE).style("-fx-fill: red;").build());
+
+        imageview.fitHeightProperty().bind(imagepane.heightProperty().subtract(imagemargin.multiply(2.0)));
+        imageview.fitWidthProperty().bind(imagepane.widthProperty().subtract(imagemargin.multiply(2.0))); 
+        imagecam.fitHeightProperty().bind(imagepane.heightProperty().subtract(imagemargin.multiply(2.0)));
+        imagecam.fitWidthProperty().bind(imagepane.widthProperty().subtract(imagemargin.multiply(2.0)));    
+        
+        panecam.setStyle("-fx-background-color: BLACK");
+               
+        panecam.visibleProperty().bind(imagecam.busyProperty());
+        imageview.visibleProperty().bind(imagecam.busyProperty().not());
+        
+        choosebutton.visibleProperty().bind(imagecam.busyProperty().not());
+        clearbutton.visibleProperty().bind(imagecam.busyProperty().not());
+        webcambutton.setDisable(!imagecam.hasWebCam());
+        webcambutton.visibleProperty().bind(imagecam.busyProperty().not());
+        webcamtrigger.visibleProperty().bind(imagecam.busyProperty());
+        webcamtrigger.disableProperty().bind(imagecam.capturingProperty().not());
+        webcamcancel.visibleProperty().bind(imagecam.busyProperty());    
+        
+        toolbar.setOpacity(0.0);
+        fadetransition = new FadeTransition(Duration.millis(200), toolbar);
+        fadetransition.setCycleCount(1);
+        fadetransition.setInterpolator(Interpolator.EASE_BOTH);  
+        
+        flashtransition = createFlashTransition(flash);
+        
+        focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            hasfocus = newPropertyValue;
+            buttonsVisibility();
+        });        
+
+        hasmouse = false;
+        hasfocus = this.isFocused();
+    }    
+    
     @FXML
     void chooseAction(ActionEvent event) {
         requestFocus();
@@ -88,7 +148,34 @@ public class ImageChooser extends AnchorPane {
     @FXML
     void clearAction(ActionEvent event) {
         requestFocus();
-        setImage(null);
+        clearImage();
+    }
+    
+    @FXML
+    void webcamAction(ActionEvent event) {
+        requestFocus();
+        try {
+            imagecam.startWebCam();
+        } catch (ImageWebCamException ex) {
+            Logger.getLogger(ImageChooser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @FXML
+    void onWebcamTrigger(ActionEvent event) {
+        requestFocus();
+        if (imagecam.isCapturing()) {
+            setImage(imagecam.getImage());
+            imagecam.stopWebCam();
+            flashtransition.playFromStart();
+            triggerclip.play();
+        }
+    }
+    
+    @FXML
+    void onWebcamCancel(ActionEvent event) {
+        requestFocus();
+        imagecam.stopWebCam();
     }
     
     @FXML
@@ -96,7 +183,7 @@ public class ImageChooser extends AnchorPane {
         if (KeyCode.SPACE == event.getCode()) {
             chooseImage();
         } else if (KeyCode.DELETE == event.getCode()) {
-            setImage(null);
+            clearImage();
         }
     }    
     
@@ -117,7 +204,14 @@ public class ImageChooser extends AnchorPane {
         buttonsVisibility();
     }
     
+    void clearImage() {
+        imagecam.stopWebCam();
+        setImage(null);
+    }
+    
     void chooseImage() {
+        
+        imagecam.stopWebCam();
         
         Platform.runLater(() -> {
             final FileChooser fileChooser = new FileChooser();
@@ -139,6 +233,10 @@ public class ImageChooser extends AnchorPane {
                 }
             }
         });
+    }
+    
+    public void cancelWebCam() {
+        imagecam.stopWebCam();
     }
 
     public final void setImage(Image value) {
@@ -177,26 +275,18 @@ public class ImageChooser extends AnchorPane {
         }
     }
     
-    @FXML
-    public void initialize() {   
+    private Transition createFlashTransition(Node n) { 
 
-        choosebutton.setGraphic(IconBuilder.create(FontAwesome.FA_FOLDER_O).build());
-        clearbutton.setGraphic(IconBuilder.create(FontAwesome.FA_TRASH).build());
+        FadeTransition s1 = new FadeTransition(Duration.millis(50), n);
+        s1.setInterpolator(Interpolator.EASE_OUT);
+        s1.setFromValue(0.0);
+        s1.setToValue(1.0);
         
-        imageview.fitHeightProperty().bind(imagepane.heightProperty().subtract(imagemargin.multiply(2.0)));
-        imageview.fitWidthProperty().bind(imagepane.widthProperty().subtract(imagemargin.multiply(2.0)));       
+        FadeTransition s2 = new FadeTransition(Duration.millis(600), n);
+        s2.setInterpolator(Interpolator.EASE_BOTH);
+        s2.setFromValue(1.0);
+        s2.setToValue(0.0);
         
-        toolbar.setOpacity(0.0);
-        fadetransition = new FadeTransition(Duration.millis(200), toolbar);
-        fadetransition.setCycleCount(1);
-        fadetransition.setInterpolator(Interpolator.EASE_BOTH);    
-        
-        focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
-            hasfocus = newPropertyValue;
-            buttonsVisibility();
-        });        
-
-        hasmouse = false;
-        hasfocus = this.isFocused();
-    }    
+        return new SequentialTransition(s1, s2);
+    }
 }

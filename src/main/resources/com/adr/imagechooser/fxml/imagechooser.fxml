@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.adr.imagechooser.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root focusTraversable="true" onKeyPressed="#keyPressedAction" onMouseClicked="#clickedAction" onMouseEntered="#mouseEnterAction" onMouseExited="#mouseExitAction" prefHeight="250.0" prefWidth="250.0" styleClass="scroll-pane" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root focusTraversable="true" onKeyPressed="#keyPressedAction" onMouseClicked="#clickedAction" onMouseEntered="#mouseEnterAction" onMouseExited="#mouseExitAction" prefHeight="250.0" prefWidth="250.0" styleClass="scroll-pane" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane fx:id="imagepane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
+            <StackPane fx:id="panecam" maxHeight="-Infinity" maxWidth="-Infinity" visible="false">
+               <children>
+                    <ImageWebcam fx:id="imagecam" pickOnBounds="true" preserveRatio="true" />
+                </children>
+            </StackPane>                    
             <ImageView fx:id="imageview" pickOnBounds="true" preserveRatio="true" />
-         </children>
+        </children>
       </StackPane>
+      <StackPane fx:id="flash" opacity="0.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <HBox fx:id="toolbar" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button fx:id="choosebutton" focusTraversable="false" mnemonicParsing="false" onAction="#chooseAction" />
             <Button fx:id="clearbutton" focusTraversable="false" mnemonicParsing="false" onAction="#clearAction" />
+            <Button fx:id="webcambutton" focusTraversable="false" mnemonicParsing="false" onAction="#webcamAction" />
+            <Button fx:id="webcamtrigger" focusTraversable="false" mnemonicParsing="false" onAction="#onWebcamTrigger" />
+            <Button fx:id="webcamcancel" focusTraversable="false" mnemonicParsing="false" onAction="#onWebcamCancel" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

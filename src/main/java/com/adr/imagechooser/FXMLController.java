@@ -20,6 +20,8 @@ package com.adr.imagechooser;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -29,8 +31,9 @@ public class FXMLController {
     @FXML private ResourceBundle resources;
     @FXML private URL location;
 
-    @FXML
-    private ImageChooser imagechooser;
+    
+    @FXML private ImageChooser imagechooser;
+    @FXML private ImageWebcam imagewebcam;
     
     @FXML
     void handleButtonAction(ActionEvent event) {
@@ -40,6 +43,20 @@ public class FXMLController {
     @FXML
     void clearAction(ActionEvent event) {
         imagechooser.setImage(null);
+    }
+    
+    @FXML
+    void onStartWebcam(ActionEvent event) {
+        try {
+            imagewebcam.startWebCam();
+        } catch (ImageWebCamException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @FXML
+    void onStopWebcam(ActionEvent event) {
+        imagewebcam.stopWebCam();
     }
 
     
