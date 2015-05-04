@@ -19,9 +19,9 @@ package com.adr.imagechooser;
 
 import com.adr.fonticon.FontAwesome;
 import com.adr.fonticon.IconBuilder;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +34,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,6 +51,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -227,8 +229,10 @@ public class ImageChooser extends AnchorPane {
             File file = fileChooser.showOpenDialog(this.getScene().getWindow());
             if (file != null) {
                 try {
-                    setImage(new Image(file.toURI().toURL().toString()));
-                } catch (MalformedURLException ex) {
+                    BufferedImage bufferedImage = ImageIO.read(file);
+                    Image image = SwingFXUtils.toFXImage(bufferedImage, null);                
+                    setImage(image);
+                } catch (IOException ex) {
                     Logger.getLogger(ImageChooser.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
