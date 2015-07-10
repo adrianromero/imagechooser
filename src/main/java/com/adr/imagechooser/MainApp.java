@@ -1,4 +1,4 @@
-//    AwesomeIcon is a library to select and display images control for JavaFX
+//    ImageChooser is a library to select and display images control for JavaFX
 //    Copyright (C) 2014 Adrián Romero Corchado.
 //
 //    This file is part of ImageChooser
@@ -33,7 +33,7 @@ public class MainApp extends Application {
         
         Scene scene = new Scene(root);
         
-        stage.setTitle("JavaFX and Maven");
+        stage.setTitle("Image chooser demo");
         stage.setScene(scene);
         stage.show();
     }

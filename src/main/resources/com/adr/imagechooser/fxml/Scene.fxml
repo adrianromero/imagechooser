@@ -11,17 +11,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="380.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.adr.imagechooser.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="380.0" prefWidth="390.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.adr.imagechooser.FXMLController">
     <children>
       <BorderPane layoutX="300.0" layoutY="103.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
             <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <items>
-                    <Button onAction="#handleButtonAction" text="Load" />
+                  <Button mnemonicParsing="false" onAction="#handleButtonAction" text="Load" />
                   <Button mnemonicParsing="false" onAction="#clearAction" text="Clear" />
-                  <Separator orientation="VERTICAL" />
-                  <Button mnemonicParsing="false" onAction="#onStartWebcam" text="Start webcam" />
-                  <Button mnemonicParsing="false" onAction="#onStopWebcam" text="Stop webcam" />
                </items>
             </ToolBar>
          </top>
@@ -29,7 +26,6 @@
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
                   <ImageChooser fx:id="imagechooser" layoutX="31.0" layoutY="18.0" prefHeight="200.0" prefWidth="200.0" />
-                  <ImageWebcam fx:id="imagewebcam" fitHeight="178.0" fitWidth="246.0" layoutX="373.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </AnchorPane>
          </center>
