@@ -3,7 +3,7 @@ Image Chooser
 
 Select and display images control for JavaFX.
 
-This library includes an edit control for Java FX for imagea. It allows to load images from the file system or web cam.
+This library includes an edit control for Java FX. It allows to load images from the file system or capture web cam images. And you can use it directly from java code or the [JavaFX Scene Builder](http://www.oracle.com/technetwork/java/javase/downloads/javafxscenebuilder-info-2157684.html).
 
 Screenshots
 ===========
@@ -12,9 +12,9 @@ Screenshots
 
 Displaying an image
 
-![Selecting a webcam image](https://raw.github.com/adrianromero/imagechooser/master/screenshot-demo2.png)
+![Capturing a webcam image](https://raw.github.com/adrianromero/imagechooser/master/screenshot-demo2.png)
 
-Selecting a webcam image
+Capturing a webcam image
 
 Acknowledgments
 ===============
