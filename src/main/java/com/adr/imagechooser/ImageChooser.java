@@ -49,6 +49,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
@@ -104,8 +105,8 @@ public class ImageChooser extends AnchorPane {
         choosebutton.setGraphic(IconBuilder.create(FontAwesome.FA_FOLDER_O).build());
         clearbutton.setGraphic(IconBuilder.create(FontAwesome.FA_TRASH).build());
         webcambutton.setGraphic(IconBuilder.create(FontAwesome.FA_CAMERA).build());
-        webcamtrigger.setGraphic(IconBuilder.create(FontAwesome.FA_CIRCLE).style("-fx-fill: green;").build());
-        webcamcancel.setGraphic(IconBuilder.create(FontAwesome.FA_SQUARE).style("-fx-fill: red;").build());
+        webcamtrigger.setGraphic(IconBuilder.create(FontAwesome.FA_CIRCLE).color(Color.GREEN).build());
+        webcamcancel.setGraphic(IconBuilder.create(FontAwesome.FA_SQUARE).color(Color.RED).build());
 
         imageview.fitHeightProperty().bind(imagepane.heightProperty().subtract(imagemargin.multiply(2.0)));
         imageview.fitWidthProperty().bind(imagepane.widthProperty().subtract(imagemargin.multiply(2.0))); 
