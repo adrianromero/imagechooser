@@ -1,4 +1,4 @@
-Image Chooser
+Image Chooser  [![Release](https://jitpack.io/v/adrianromero/imagechooser.svg)](https://jitpack.io/#adrianromero/imagechooser)
 =============
 
 Select and display images control for JavaFX.
@@ -15,6 +15,21 @@ Displaying an image
 ![Capturing a webcam image](https://raw.github.com/adrianromero/imagechooser/master/screenshot-demo2.png)
 
 Capturing a webcam image
+
+Install
+=======
+
+To install the library add: 
+ 
+   ```gradle
+   repositories { 
+        jcenter()
+        maven { url "https://jitpack.io" }
+   }
+   dependencies {
+         compile 'com.github.adrianromero:imagechooser:1.0.0'
+   }
+   ```  
 
 Acknowledgments
 ===============
